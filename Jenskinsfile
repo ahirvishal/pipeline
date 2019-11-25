@@ -3,10 +3,12 @@ def remote = [:]
 remote.name = "ec2"
 remote.host = "ec2-13-233-39-165.ap-south-1.compute.amazonaws.com"
 remote.allowAnyHosts = true
-
+echo $remote.name
+            echo $remote.user
+            
 node 
 {
-    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: '/home/symphony/Downloads', usernameVariable: 'centos')]) {
+    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: '/home/symphony/Downloads/jen.pem', usernameVariable: 'centos')]) {
         remote.user = centos
         remote.identityFile = '/home/symphony/Downloads/jen.pem'
         stage("SSH Steps Rocks!") 
@@ -15,5 +17,4 @@ node
             echo $remote.user
         }
         
-    }
-}
+ }
