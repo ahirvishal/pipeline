@@ -1,10 +1,18 @@
-  def remote = [:]
-    remote.name = 'ec2-user'
-    remote.host = 'ec2-13-233-39-165.ap-south-1.compute.amazonaws.com'
-    remote.user = 'centos'
-    remote.allowAnyHosts = true
-    stage('Remote SSH') 
-    {
-        echo $remote.name
-        echo $remote.host
+def remote = [:]
+remote.name = "ec2"
+remote.host = "ec2-13-233-39-165.ap-south-1.compute.amazonaws.com"
+remote.allowAnyHosts = true
+
+node {
+    withCredentials([sshUserPrivateKey(credentialsId: 'ec2-instance', keyFileVariable: '/home/symphony/Downloads', passphraseVariable: '', usernameVariable: 'centos')]) {
+        remote.user = centos
+        remote.identityFile = '/home/symphony/Downloads/'
+        stage("SSH Steps Rocks!") {
+            writeFile file: '/home/symphony/hi.txt', text: 'ls'
+            sshCommand remote: remote, command: 'for i in {1..5}; do echo -n \"Loop \$i \"; date ; sleep 1; done'
+            sshPut remote: remote, from: '/home/symphony/hi.txt', into: '.'
+            sshGet remote: remote, from: '/home/symphony/hi.txt', into: '/home/centos/hi.txt', override: true
+            sshScript remote: remote, script: '/home/symphony/hi.txt'
+            sshRemove remote: remote, path: '/home/symphony/hi.txt'
+        }
     }
