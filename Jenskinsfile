@@ -1,1 +1,10 @@
-echo " this is from jenkins file"
+  def remote = [:]
+    remote.name = 'ec2-user'
+    remote.host = 'ec2-13-233-39-165.ap-south-1.compute.amazonaws.com'
+    remote.user = 'centos'
+    remote.allowAnyHosts = true
+    stage('Remote SSH') 
+    {
+        echo $remote.name
+        echo $remote.host
+    }
